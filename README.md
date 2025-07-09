@@ -32,7 +32,7 @@ This project demonstrates a robust data integration pipeline using **Azure Data 
 * Provides **flexible orchestration** and **inter-pipeline communication**
 
 ---
-
+ 
 ## 🎯 🎁 Two Bonus Features (Cherry on the Cake!)
 
 ### 📨 1. **Email Notification System (Logic App Integration)**

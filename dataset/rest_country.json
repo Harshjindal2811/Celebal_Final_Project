@@ -8,7 +8,7 @@
 		"parameters": {
 			"country": {
 				"type": "string"
-			}
+			} 
 		},
 		"annotations": [],
 		"type": "Json",
