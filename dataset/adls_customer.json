@@ -1,0 +1,21 @@
+{
+	"name": "adls_customer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorageForCustomer",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "customer.json",
+				"folderPath": "customer",
+				"fileSystem": "destination"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,219 @@
+{
+	"name": "CopyCustomerPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetCustomerCount",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT 300 AS total",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "sql_customer",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "IfMoreThan500",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "GetCustomerCount",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('GetCustomerCount').output.firstRow.total, 500)\n",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "SendEmailAlert",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "POST",
+								"headers": {
+									"Content-Type": "application/json"
+								},
+								"url": "https://prod-29.eastus2.logic.azure.com:443/workflows/031acfccbe844a64b11803590773ff4f/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=U7znYr4a2JS-VkSg5IAZBQOGTXChWafT5YJGRrBTqIs",
+								"body": {
+									"to": "harshjindal2811@gmail.com",
+									"subject": "ADF Alert: Customer count too low",
+									"body": "Customer record count is ≤ 500. Pipeline skipped data copy."
+								}
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "CopyCustomerData",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "sql_customer",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "adls_customer",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "LogPipelineRunSuccess",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "CopyCustomerData",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[LogPipelineRun]",
+								"storedProcedureParameters": {
+									"@PipelineName": {
+										"value": "\"CopyCustomerPipeline\"",
+										"type": "String"
+									},
+									"@RunTime": {
+										"value": {
+											"value": "@utcNow()",
+											"type": "Expression"
+										},
+										"type": "Datetime"
+									},
+									"@Status": {
+										"value": "\"Success\"",
+										"type": "String"
+									},
+									"@RecordCount": {
+										"value": {
+											"value": "@activity('GetCustomerCount').output.firstRow.total\n\n",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "SqlServer",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "IfMoreThan600",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "GetCustomerCount",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(activity('GetCustomerCount').output.firstRow.total, 600)\n",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "RunProductPipeline",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "CopyProductPipeline",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"customerCount": {
+										"value": "@activity('GetCustomerCount').output.firstRow.total\n",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-07-09T04:34:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "harshjindal2811-df",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a59dd109-d744-4849-8054-f131ce30cbe7",
+		"tenantId": "ecfd44e6-facd-4e15-aa1d-f4232d0f74dd"
+	}
+}
