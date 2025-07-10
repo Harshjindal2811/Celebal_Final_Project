@@ -169,7 +169,7 @@
 									},
 									"@RecordCount": {
 										"value": {
-											"value": "@activity('GetCustomerCount').output.firstRow.total\n\n",
+											"value": "@activity('GetCustomerCount').output.firstRow.row_count",
 											"type": "Expression"
 										},
 										"type": "Int32"
