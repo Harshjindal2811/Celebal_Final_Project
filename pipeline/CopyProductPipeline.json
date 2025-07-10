@@ -34,13 +34,22 @@
 				"inputs": [
 					{
 						"referenceName": "sql_product",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "product",
+							"schema_name": "dbo"
+						}
 					}
 				],
 				"outputs": [
 					{
 						"referenceName": "adls_product",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"container": "destination",
+							"folder_name": "product",
+							"file_name": "product.json"
+						}
 					}
 				]
 			}
