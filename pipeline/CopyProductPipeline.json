@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "If Condition1",
+				"name": "IfMoreThan600",
 				"type": "IfCondition",
 				"dependsOn": [],
 				"userProperties": [],
@@ -44,17 +44,13 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "sql_product",
-									"type": "DatasetReference",
-									"parameters": {
-										"table_name": "product",
-										"schema_name": "dbo"
-									}
+									"referenceName": "sql_CustomerProduct",
+									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "adls_product",
+									"referenceName": "adls_CustomerProduct",
 									"type": "DatasetReference",
 									"parameters": {
 										"container": "destination",

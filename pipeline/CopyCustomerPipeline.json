@@ -22,7 +22,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "sql_customer",
+						"referenceName": "sql_CustomerProduct",
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": ".",
@@ -107,14 +107,19 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "sql_customer",
+									"referenceName": "sql_CustomerProduct",
 									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "adls_customer",
-									"type": "DatasetReference"
+									"referenceName": "adls_CustomerProduct",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": "destination",
+										"folder_name": "product",
+										"file_name": "product.json"
+									}
 								}
 							]
 						},
@@ -173,7 +178,7 @@
 				}
 			},
 			{
-				"name": "Execute Pipeline1",
+				"name": "RunProducPipeline",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
