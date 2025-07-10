@@ -173,8 +173,8 @@
 				}
 			},
 			{
-				"name": "IfMoreThan600",
-				"type": "IfCondition",
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
 						"activity": "GetCustomerCount",
@@ -183,36 +183,22 @@
 						]
 					}
 				],
+				"policy": {
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"expression": {
-						"value": "@greater(activity('GetCustomerCount').output.firstRow.row_count, 600)\n",
-						"type": "Expression"
+					"pipeline": {
+						"referenceName": "CopyProductPipeline",
+						"type": "PipelineReference"
 					},
-					"ifTrueActivities": [
-						{
-							"name": "RunProductPipeline",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "CopyProductPipeline",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"customerCount": {
-										"value": "@activity('GetCustomerCount').output.firstRow.total\n",
-										"type": "Expression"
-									}
-								}
-							}
+					"waitOnCompletion": true,
+					"parameters": {
+						"customerCount": {
+							"value": "@activity('GetCustomerCount').output.firstRow.row_count",
+							"type": "Expression"
 						}
-					]
+					}
 				}
 			}
 		],
