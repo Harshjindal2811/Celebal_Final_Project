@@ -150,7 +150,10 @@
 								"storedProcedureName": "[dbo].[LogPipelineRun]",
 								"storedProcedureParameters": {
 									"@PipelineName": {
-										"value": "\"CopyCustomerPipeline\"",
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"@RunTime": {
