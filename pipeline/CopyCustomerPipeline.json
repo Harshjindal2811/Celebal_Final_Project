@@ -110,8 +110,8 @@
 									"referenceName": "sql_CustomerProduct",
 									"type": "DatasetReference",
 									"parameters": {
-										"schema_name": ".",
-										"table_name": "."
+										"schema_name": "dbo",
+										"table_name": "customer"
 									}
 								}
 							],
@@ -121,8 +121,8 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"container": "destination",
-										"folder_name": "product",
-										"file_name": "product.json"
+										"folder_name": "customer",
+										"file_name": "customer.json"
 									}
 								}
 							]
