@@ -110,8 +110,8 @@
 									"referenceName": "sql_CustomerProduct",
 									"type": "DatasetReference",
 									"parameters": {
-										"schema_name": "dbo",
-										"table_name": "Customer"
+										"schema_name": ".",
+										"table_name": "."
 									}
 								}
 							],
