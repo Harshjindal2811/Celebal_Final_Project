@@ -45,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@greater(activity('GetCustomerCount').output.firstRow.total, 500)\n",
+						"value": "@greater(activity('GetCustomerCount').output.firstRow.row_count, 500)\n",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -186,7 +186,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@greater(activity('GetCustomerCount').output.firstRow.total, 600)\n",
+						"value": "@greater(activity('GetCustomerCount').output.firstRow.row_count, 600)\n",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
