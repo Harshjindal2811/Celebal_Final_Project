@@ -45,7 +45,11 @@
 							"inputs": [
 								{
 									"referenceName": "sql_CustomerProduct",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"schema_name": "dbo",
+										"table_name": "Customer"
+									}
 								}
 							],
 							"outputs": [
