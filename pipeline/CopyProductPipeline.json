@@ -3,55 +3,69 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "CopyProduct",
-				"type": "Copy",
+				"name": "If Condition1",
+				"type": "IfCondition",
 				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "SqlServerSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
+					"expression": {
+						"value": "@greater(pipeline().parameters.customerCount,600)",
+						"type": "Expression"
 					},
-					"sink": {
-						"type": "JsonSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "JsonWriteSettings"
+					"ifTrueActivities": [
+						{
+							"name": "CopyProduct",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "sql_product",
+									"type": "DatasetReference",
+									"parameters": {
+										"table_name": "product",
+										"schema_name": "dbo"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "adls_product",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": "destination",
+										"folder_name": "product",
+										"file_name": "product.json"
+									}
+								}
+							]
 						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "sql_product",
-						"type": "DatasetReference",
-						"parameters": {
-							"table_name": "product",
-							"schema_name": "dbo"
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "adls_product",
-						"type": "DatasetReference",
-						"parameters": {
-							"container": "destination",
-							"folder_name": "product",
-							"file_name": "product.json"
-						}
-					}
-				]
+					]
+				}
 			}
 		],
 		"parameters": {
