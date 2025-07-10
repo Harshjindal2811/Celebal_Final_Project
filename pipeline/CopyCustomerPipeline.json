@@ -165,7 +165,7 @@
 									},
 									"RunTime": {
 										"value": {
-											"value": "@activity('CopyCustomerData').output.copyDuration",
+											"value": "@pipeline().TriggerTime",
 											"type": "Expression"
 										},
 										"type": "DateTime"
