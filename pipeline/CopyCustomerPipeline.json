@@ -172,7 +172,7 @@
 									},
 									"Status": {
 										"value": {
-											"value": "@activity('CopyCustomerData').output.executionDetails.status",
+											"value": "@activity('CopyCustomerData').output.executionDetails[0].status",
 											"type": "Expression"
 										},
 										"type": "String"
