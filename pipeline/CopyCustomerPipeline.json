@@ -17,13 +17,17 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT 300 AS total",
+						"sqlReaderQuery": "select count(1) as row_count from dbo.customer",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "sql_customer",
-						"type": "DatasetReference"
+						"referenceName": "sql_CustomerProduct",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": ".",
+							"table_name": "."
+						}
 					}
 				}
 			},
@@ -41,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@greater(activity('GetCustomerCount').output.firstRow.total, 500)\n",
+						"value": "@greater(activity('GetCustomerCount').output.firstRow.row_count, 500)\n",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -103,14 +107,23 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "sql_customer",
-									"type": "DatasetReference"
+									"referenceName": "sql_CustomerProduct",
+									"type": "DatasetReference",
+									"parameters": {
+										"schema_name": ".",
+										"table_name": "."
+									}
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "adls_customer",
-									"type": "DatasetReference"
+									"referenceName": "adls_CustomerProduct",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": "destination",
+										"folder_name": "product",
+										"file_name": "product.json"
+									}
 								}
 							]
 						},
@@ -137,7 +150,10 @@
 								"storedProcedureName": "[dbo].[LogPipelineRun]",
 								"storedProcedureParameters": {
 									"@PipelineName": {
-										"value": "\"CopyCustomerPipeline\"",
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"@RunTime": {
@@ -153,7 +169,7 @@
 									},
 									"@RecordCount": {
 										"value": {
-											"value": "@activity('GetCustomerCount').output.firstRow.total\n\n",
+											"value": "@int(activity('GetCustomerCount').output.firstRow.total)",
 											"type": "Expression"
 										},
 										"type": "Int32"
@@ -169,8 +185,8 @@
 				}
 			},
 			{
-				"name": "IfMoreThan600",
-				"type": "IfCondition",
+				"name": "RunProducPipeline",
+				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
 						"activity": "GetCustomerCount",
@@ -179,36 +195,22 @@
 						]
 					}
 				],
+				"policy": {
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"expression": {
-						"value": "@greater(activity('GetCustomerCount').output.firstRow.total, 600)\n",
-						"type": "Expression"
+					"pipeline": {
+						"referenceName": "CopyProductPipeline",
+						"type": "PipelineReference"
 					},
-					"ifTrueActivities": [
-						{
-							"name": "RunProductPipeline",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"policy": {
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "CopyProductPipeline",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"customerCount": {
-										"value": "@activity('GetCustomerCount').output.firstRow.total\n",
-										"type": "Expression"
-									}
-								}
-							}
+					"waitOnCompletion": true,
+					"parameters": {
+						"customerCount": {
+							"value": "@activity('GetCustomerCount').output.firstRow.row_count",
+							"type": "Expression"
 						}
-					]
+					}
 				}
 			}
 		],

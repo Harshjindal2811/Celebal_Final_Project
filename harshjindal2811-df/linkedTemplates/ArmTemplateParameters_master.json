@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "harshjindal2811-df"
+		},
+		"AzureDataLakeStorage_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorageForCustomer_accountKey": {
+			"value": ""
+		},
+		"SqlServer_password": {
+			"value": ""
+		},
+		"AzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://azureprojectharsh.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorageForCustomer_properties_typeProperties_url": {
+			"value": "https://azureprojectharsh.dfs.core.windows.net/"
+		},
+		"RestCountriesAPI_properties_typeProperties_url": {
+			"value": "https://restcountries.com/v3.1/name/"
+		},
+		"SqlServer_properties_typeProperties_server": {
+			"value": "HARSHJINDAL\\SQLEXPRESS"
+		},
+		"SqlServer_properties_typeProperties_database": {
+			"value": "harsh"
+		},
+		"SqlServer_properties_typeProperties_userName": {
+			"value": "Harsh"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
